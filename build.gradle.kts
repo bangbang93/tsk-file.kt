@@ -24,7 +24,7 @@ kotlin {
     js(IR) {
         nodejs()
         useCommonJs()
-        binaries.executable()
+        binaries.library()
         
         compilations["main"].packageJson {
             customField("name", "tsk-file")
