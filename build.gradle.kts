@@ -1,0 +1,64 @@
+plugins {
+    kotlin("multiplatform") version "2.3.0"
+    `maven-publish`
+}
+
+group = "com.bangbang93.file.tsk"
+version = "1.0.0"
+
+repositories {
+    mavenCentral()
+}
+
+kotlin {
+    jvm {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+        }
+    }
+    
+    js(IR) {
+        nodejs()
+        useCommonJs()
+        binaries.library()
+        
+        compilations["main"].packageJson {
+            customField("name", "tsk-file")
+            customField("version", version)
+        }
+        
+        compilations["test"].packageJson {
+            customField("name", "tsk-file-test-internal")
+        }
+    }
+    
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib"))
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+        val jvmMain by getting
+        val jvmTest by getting
+        val jsMain by getting
+        val jsTest by getting
+    }
+}
+
+publishing {
+    publications {
+        withType<MavenPublication> {
+            groupId = "com.bangbang93.file.tsk"
+            artifactId = "tsk-file"
+            version = project.version.toString()
+        }
+    }
+}
