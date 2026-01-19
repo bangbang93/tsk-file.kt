@@ -15,14 +15,12 @@ class TskGenerator {
         bw.clear()
         
         val header = tskMapFile.header
-        if (header == null) {
-            throw IllegalArgumentException("TskMapFile header cannot be null")
-        }
+            ?: throw IllegalArgumentException("TskMapFile header cannot be null")
         
         writeMapFileHeader(header)
         convertTestResultsToBinary(tskMapFile.dieResults)
 
-        // Add 00 placeholders for die results (8 bytes per die)
+        // Add 8-byte padding after each die result (as per TSK file format specification)
         for (die in tskMapFile.dieResults) {
             bw.writeAsBytes(ByteArray(8) { 0 })
         }
@@ -123,9 +121,14 @@ class TskGenerator {
 
         bw.openLog = false
         
-        // Add padding to make header exactly 256 bytes
-        // Current header fields total 236 bytes, so add 20 bytes of padding
-        bw.writeAsBytes(ByteArray(20) { 0 })
+        // Calculate and add padding to make header exactly 256 bytes
+        // This ensures die data starts at the standard offset
+        val currentSize = bw.toByteArray().size
+        val targetHeaderSize = 256
+        val paddingSize = targetHeaderSize - currentSize
+        if (paddingSize > 0) {
+            bw.writeAsBytes(ByteArray(paddingSize) { 0 })
+        }
     }
 
     private fun convertTestResultsToBinary(results: List<TestResultPerDie>) {
