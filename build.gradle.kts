@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "2.0.21"
+    kotlin("multiplatform") version "2.3.0"
     `maven-publish`
 }
 
@@ -15,7 +15,6 @@ kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
-        withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
         }
