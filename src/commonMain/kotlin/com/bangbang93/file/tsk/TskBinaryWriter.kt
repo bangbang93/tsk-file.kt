@@ -112,6 +112,10 @@ class TskBinaryWriter {
                 hex = hex.substring(2)
             }
 
+            require(hex.length % 2 == 0) {
+                "Hex string must have even length, but got: ${hex.length}"
+            }
+
             val bytes = ByteArray(hex.length / 2)
             for (i in bytes.indices) {
                 val substr = hex.substring(i * 2, i * 2 + 2)

@@ -50,19 +50,20 @@ class TskGenerator {
         bw.writeAsInt(header.yCoordinatesIncreaseDirection, 1)
         bw.writeAsInt(header.referenceDieSettingProcedures, 1)
         bw.writeAsInt(header.reserved, 1)
-        bw.writeAsInt(header.targetDiePositionX.toInt(), 4)
-        bw.writeAsInt(header.targetDiePositionY.toInt(), 4)
+        // Convert UInt to Int safely - these are coordinates/distances that should fit in signed range
+        bw.writeAsInt(header.targetDiePositionX.toInt() and Int.MAX_VALUE, 4)
+        bw.writeAsInt(header.targetDiePositionY.toInt() and Int.MAX_VALUE, 4)
         bw.writeAsInt(header.referenceDieCoordinatorX, 2)
         bw.writeAsInt(header.referenceDieCoordinatorY, 2)
         bw.writeAsInt(header.probingStartPosition, 1)
         bw.writeAsInt(header.probingDirection, 1)
         bw.writeAsBytes(ByteArray(2) { 0 }) // Reserved 2 bytes
-        bw.writeAsInt(header.distanceXtoWaferCenterDieOrigin.toInt(), 4)
-        bw.writeAsInt(header.distanceYtoWaferCenterDieOrigin.toInt(), 4)
+        bw.writeAsInt(header.distanceXtoWaferCenterDieOrigin.toInt() and Int.MAX_VALUE, 4)
+        bw.writeAsInt(header.distanceYtoWaferCenterDieOrigin.toInt() and Int.MAX_VALUE, 4)
         bw.writeAsInt(header.coordinatorXofWaferCenterDie, 4)
         bw.writeAsInt(header.coordinatorYofWaferCenterDie, 4)
-        bw.writeAsInt(header.firstDieCoordinatorX.toInt(), 4)
-        bw.writeAsInt(header.firstDieCoordinatorY.toInt(), 4)
+        bw.writeAsInt(header.firstDieCoordinatorX.toInt() and Int.MAX_VALUE, 4)
+        bw.writeAsInt(header.firstDieCoordinatorY.toInt() and Int.MAX_VALUE, 4)
         bw.writeAsString(header.startYear, 2)
         bw.writeAsString(header.startMonth, 2)
         bw.writeAsString(header.startDay, 2)
@@ -97,7 +98,6 @@ class TskGenerator {
         bw.writeAsInt(header.totalFailDice, 2)
         bw.writeAsInt(header.testDieInformationAddress, 4)
 
-        bw.openLog = true
         bw.writeAsInt(header.numberOfLineCategoryData, 4)
         bw.writeAsInt(header.lineCategoryAddress, 4)
 
@@ -118,8 +118,6 @@ class TskGenerator {
         bw.writeAsInt(header.maxMultiSite, 2)
         bw.writeAsInt(header.maxCategories, 2)
         bw.writeAsBytes(header.reserved6)
-
-        bw.openLog = false
         
         // Calculate and add padding to make header exactly 256 bytes
         // This ensures die data starts at the standard offset

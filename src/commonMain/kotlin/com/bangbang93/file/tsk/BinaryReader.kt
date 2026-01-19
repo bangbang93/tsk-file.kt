@@ -7,6 +7,9 @@ class BinaryReader(private val buffer: ByteArray) {
     private var position: Int = 0
 
     fun readAsBytes(bytes: Int, preventAutoForward: Boolean = false): ByteArray {
+        require(position + bytes <= buffer.size) {
+            "Cannot read $bytes bytes from position $position (buffer size: ${buffer.size})"
+        }
         val ret = buffer.copyOfRange(position, position + bytes)
         if (!preventAutoForward) {
             position += bytes
@@ -42,6 +45,9 @@ class BinaryReader(private val buffer: ByteArray) {
     }
 
     fun goto(position: Int) {
+        require(position >= 0 && position <= buffer.size) {
+            "Position $position is out of bounds for buffer of size ${buffer.size}"
+        }
         this.position = position
     }
 

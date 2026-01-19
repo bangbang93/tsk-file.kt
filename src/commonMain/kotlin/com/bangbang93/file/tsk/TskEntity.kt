@@ -8,6 +8,9 @@ class MapFileConfiguration(value: String) {
     private val bitSet: MutableList<Int>
 
     init {
+        require(value.all { it == '0' || it == '1' }) {
+            "MapFileConfiguration value must contain only binary digits ('0' or '1'): \"$value\""
+        }
         // Convert value to binary representation and reverse
         this.bitSet = value.map { it.digitToInt() }.reversed().toMutableList()
     }
@@ -165,33 +168,7 @@ data class MapFileHeader(
     var maxMultiSite: Int = 0,
     var maxCategories: Int = 0,
     var reserved6: ByteArray = ByteArray(0)
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as MapFileHeader
-
-        if (!reserved1.contentEquals(other.reserved1)) return false
-        if (!reserved2.contentEquals(other.reserved2)) return false
-        if (!reserved3.contentEquals(other.reserved3)) return false
-        if (!reserved4.contentEquals(other.reserved4)) return false
-        if (!reserved5.contentEquals(other.reserved5)) return false
-        if (!reserved6.contentEquals(other.reserved6)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = reserved1.contentHashCode()
-        result = 31 * result + reserved2.contentHashCode()
-        result = 31 * result + reserved3.contentHashCode()
-        result = 31 * result + reserved4.contentHashCode()
-        result = 31 * result + reserved5.contentHashCode()
-        result = 31 * result + reserved6.contentHashCode()
-        return result
-    }
-}
+)
 
 /**
  * Test Result Per Die
