@@ -221,12 +221,12 @@ data class TestResultPerDie(
      * 0: DieCoordinatorValueX is negative
      * 1: DieCoordinatorValueX is positive
      */
-    var codeBitOfCorrdinatorValueX: Int = 0,
+    var codeBitOfCoordinatorValueX: Int = 0,
     /**
      * 0: DieCoordinatorValueY is negative
      * 1: DieCoordinatorValueY is positive
      */
-    var codeBitOfCorrdinatorValueY: Int = 0,
+    var codeBitOfCoordinatorValueY: Int = 0,
     /**
      * except wafer
      * 0: No 1: Ignore data

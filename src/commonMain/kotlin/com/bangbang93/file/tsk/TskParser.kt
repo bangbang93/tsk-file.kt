@@ -65,7 +65,7 @@ class TskParser(data: ByteArray) {
         header.referenceDieCoordinatorY = br.readAsInt(2)
         header.probingStartPosition = br.readAsInt(1)
         header.probingDirection = br.readAsInt(1)
-        header.reserved = br.readAsInt(2)
+        br.skip(2) // Skip 2 reserved bytes
         header.distanceXtoWaferCenterDieOrigin = br.readAsInt(4).toUInt()
         header.distanceYtoWaferCenterDieOrigin = br.readAsInt(4).toUInt()
         header.coordinatorXofWaferCenterDie = br.readAsInt(4)
@@ -130,8 +130,8 @@ class TskParser(data: ByteArray) {
             die.dieProperty = word shr 14
             die.needleMarkInspectionExecutionDieSelection = (word shr 13) and 1
             die.samplingDie = (word shr 12) and 1
-            die.codeBitOfCorrdinatorValueX = (word shr 11) and 1
-            die.codeBitOfCorrdinatorValueY = (word shr 10) and 1
+            die.codeBitOfCoordinatorValueX = (word shr 11) and 1
+            die.codeBitOfCoordinatorValueY = (word shr 10) and 1
             die.dummyData = (word shr 9) and 1
             die.dieCoordinatorValueY = word and 511
             
