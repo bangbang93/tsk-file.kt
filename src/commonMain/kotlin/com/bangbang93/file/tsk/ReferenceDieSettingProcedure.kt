@@ -16,5 +16,12 @@ enum class ReferenceDieSettingProcedure(val value: Int) {
             return entries.find { it.value == value }
                 ?: throw IllegalArgumentException("Invalid ReferenceDieSettingProcedure value: $value")
         }
+        
+        /**
+         * Safely convert an integer value to ReferenceDieSettingProcedure, returning null for invalid values (0 or unknown)
+         */
+        fun fromValueOrNull(value: Int): ReferenceDieSettingProcedure? {
+            return entries.find { it.value == value }
+        }
     }
 }

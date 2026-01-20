@@ -20,5 +20,12 @@ enum class MapVersion(val value: Int) {
             return entries.find { it.value == value }
                 ?: throw IllegalArgumentException("Invalid MapVersion value: $value")
         }
+        
+        /**
+         * Safely convert an integer value to MapVersion, returning NORMAL for invalid values
+         */
+        fun fromValueOrDefault(value: Int): MapVersion {
+            return entries.find { it.value == value } ?: NORMAL
+        }
     }
 }
