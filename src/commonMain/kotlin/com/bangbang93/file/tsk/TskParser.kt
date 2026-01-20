@@ -12,12 +12,6 @@ class TskParser(data: ByteArray) {
         mapFile.header = loadMapFileHeader(br)
 
         when (mapFile.header?.mapVersion) {
-            MapVersion.NORMAL -> {
-                // Handle case 0
-            }
-            MapVersion.CHIPS_250K -> {
-                // Handle case 1
-            }
             MapVersion.MULTI_SITES_256 -> {
                 br.goto(mapFile.header?.testDieInformationAddress ?: 0)
                 val dieCount = (mapFile.header?.mapDataAreaRowSize ?: 0) * 
@@ -27,14 +21,12 @@ class TskParser(data: ByteArray) {
                     // Handle extension header
                 }
             }
-            MapVersion.MULTI_SITES_256_NO_EXT -> {
-                // Handle case 3
+            MapVersion.NORMAL, MapVersion.CHIPS_250K, MapVersion.MULTI_SITES_256_NO_EXT, MapVersion.CATEGORY_1024 -> {
+                // These map versions are not yet fully implemented
+                // For now, we parse the header but skip die results
             }
-            MapVersion.CATEGORY_1024 -> {
-                // Handle case 4
-            }
-            else -> {
-                // Handle null case
+            null -> {
+                // Header is null, cannot proceed with parsing
             }
         }
     }
