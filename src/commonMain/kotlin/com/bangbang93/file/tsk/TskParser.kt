@@ -125,7 +125,7 @@ class TskParser(data: ByteArray) {
         for (i in 0 until dieCount) {
             val die = TestResultPerDie()
             var word = br.readAsInt(2)
-            die.dieTestResult = DieTestResult.fromValue(word shr 14)
+            die.dieTestResult = DieTestResult.fromValueOrDefault(word shr 14)
             die.marking = (word shr 13) and 1
             die.failMarkInspection = (word shr 12) and 1
             die.reProbingResult = (word shr 10) and 3
@@ -133,7 +133,7 @@ class TskParser(data: ByteArray) {
             die.dieCoordinatorValueX = word and 511
             
             word = br.readAsInt(2)
-            die.dieProperty = DieProperty.fromValue(word shr 14)
+            die.dieProperty = DieProperty.fromValueOrDefault(word shr 14)
             die.needleMarkInspectionExecutionDieSelection = (word shr 13) and 1
             die.samplingDie = (word shr 12) and 1
             die.codeBitOfCoordinatorValueX = (word shr 11) and 1

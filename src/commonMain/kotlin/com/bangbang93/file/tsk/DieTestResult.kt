@@ -18,5 +18,12 @@ enum class DieTestResult(val value: Int) {
             return entries.find { it.value == value } 
                 ?: throw IllegalArgumentException("Invalid DieTestResult value: $value")
         }
+        
+        /**
+         * Safely convert an integer value to DieTestResult, returning NOT_TESTED for invalid values
+         */
+        fun fromValueOrDefault(value: Int): DieTestResult {
+            return entries.find { it.value == value } ?: NOT_TESTED
+        }
     }
 }

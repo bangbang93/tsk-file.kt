@@ -16,5 +16,12 @@ enum class DieProperty(val value: Int) {
             return entries.find { it.value == value }
                 ?: throw IllegalArgumentException("Invalid DieProperty value: $value")
         }
+        
+        /**
+         * Safely convert an integer value to DieProperty, returning SKIP for invalid values
+         */
+        fun fromValueOrDefault(value: Int): DieProperty {
+            return entries.find { it.value == value } ?: SKIP
+        }
     }
 }
