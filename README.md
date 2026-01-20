@@ -7,9 +7,19 @@ This project is a Kotlin Multiplatform port of [tsk-parser](https://github.com/I
 ## Features
 
 - 🎯 **Multiplatform Support**: Works on JVM and Node.js
-- 📦 **Easy to Use**: Simple API for parsing and generating TSK files
-- 🔧 **Type Safe**: Fully typed Kotlin API with data classes
+- 📦 **Easy to Use**: Simple API for parsing and generating TSK files from byte arrays
+- 🔧 **Type Safe**: Fully typed Kotlin API with data classes and type-safe enums
 - ⚡ **Modern**: Built with Kotlin 2.3 and Gradle 9.2
+
+## Type-Safe Enums
+
+The library provides type-safe enumerations for common field values:
+
+- **`DieTestResult`**: `NOT_TESTED`, `PASS`, `FAIL_1`, `FAIL_2`
+- **`DieProperty`**: `SKIP`, `PROBING`, `COMPULSORY_MARKING`
+- **`MapVersion`**: `NORMAL`, `CHIPS_250K`, `MULTI_SITES_256`, `MULTI_SITES_256_NO_EXT`, `CATEGORY_1024`
+- **`CoordinateDirection`**: `DIRECTION_1`, `DIRECTION_2` (for X/Y coordinate directions)
+- **`ReferenceDieSettingProcedure`**: `WAFER_CENTER_DIE`, `TEACHING_DIE`, `TARGET_SENSE_DIE`
 
 ## Installation
 
@@ -44,13 +54,11 @@ npm install tsk-file
 #### JVM
 
 ```kotlin
-import com.bangbang93.file.tsk.TskFileReader
+import com.bangbang93.file.tsk.*
+import java.io.File
 
-// Parse from file
-val mapFile = TskFileReader.parseFile("/path/to/file.tsk")
-
-// Or parse from byte array
-val data: ByteArray = ... // your byte array
+// Parse from byte array
+val data: ByteArray = File("/path/to/file.tsk").readBytes()
 val mapFile = TskFileReader.parseBytes(data)
 
 // Access header information
@@ -61,9 +69,14 @@ println("Total Tested: ${mapFile.header?.totalTestedDice}")
 println("Total Pass: ${mapFile.header?.totalPassDice}")
 println("Total Fail: ${mapFile.header?.totalFailDice}")
 
-// Access die results
+// Access die results with type-safe enums
 mapFile.dieResults.forEach { die ->
-    println("Die Test Result: ${die.dieTestResult}")
+    when (die.dieTestResult) {
+        DieTestResult.PASS -> println("Pass die")
+        DieTestResult.FAIL_1 -> println("Fail 1 die")
+        DieTestResult.FAIL_2 -> println("Fail 2 die")
+        DieTestResult.NOT_TESTED -> println("Not tested")
+    }
 }
 ```
 
@@ -71,8 +84,10 @@ mapFile.dieResults.forEach { die ->
 
 ```javascript
 const { TskFileReader } = require('tsk-file');
+const fs = require('fs');
 
-const mapFile = TskFileReader.parseFile('/path/to/file.tsk');
+const data = fs.readFileSync('/path/to/file.tsk');
+const mapFile = TskFileReader.parseBytes(data);
 
 // Access header information
 console.log(`Operator: ${mapFile.header.operatorName}`);
@@ -91,13 +106,14 @@ mapFile.dieResults.forEach(die => {
 
 ```kotlin
 import com.bangbang93.file.tsk.*
+import java.io.File
 
 // Create header
 val header = MapFileHeader(
     operatorName = "Operator",
     deviceName = "Device",
     waferSize = 200,
-    mapVersion = 2,
+    mapVersion = MapVersion.MULTI_SITES_256,
     mapDataAreaRowSize = 10,
     mapDataAreaLineSize = 10,
     totalTestedDice = 100,
@@ -111,27 +127,28 @@ val header = MapFileHeader(
     reserved6 = ByteArray(2)
 )
 
-// Create die results
+// Create die results with type-safe enums
 val dieResults = listOf(
-    TestResultPerDie(dieTestResult = 1), // Pass
-    TestResultPerDie(dieTestResult = 2), // Fail
+    TestResultPerDie(dieTestResult = DieTestResult.PASS),
+    TestResultPerDie(dieTestResult = DieTestResult.FAIL_1),
     // ... more die results
 )
 
 // Create map file
 val mapFile = TskMapFile(header = header, dieResults = dieResults)
 
-// Write to file
-TskFileWriter.writeFile(mapFile, "/path/to/output.tsk")
-
-// Or generate as byte array
+// Generate as byte array
 val data = TskFileWriter.writeBytes(mapFile)
+
+// Write to file (handle file I/O separately)
+File("/path/to/output.tsk").writeBytes(data)
 ```
 
 #### Node.js
 
 ```javascript
 const { TskMapFile, MapFileHeader, TestResultPerDie, TskFileWriter } = require('tsk-file');
+const fs = require('fs');
 
 // Create header
 const header = new MapFileHeader();
@@ -150,8 +167,11 @@ const dieResults = [
 // Create map file
 const mapFile = new TskMapFile({ header, dieResults });
 
-// Write to file
-TskFileWriter.writeFile(mapFile, '/path/to/output.tsk');
+// Generate as byte array
+const data = TskFileWriter.writeBytes(mapFile);
+
+// Write to file (handle file I/O separately)
+fs.writeFileSync('/path/to/output.tsk', data);
 ```
 
 ## Building
