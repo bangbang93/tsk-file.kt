@@ -4,24 +4,13 @@ package com.bangbang93.file.tsk
  * Test Result Per Die
  */
 data class TestResultPerDie(
-    /**
-     * 0: Not Tested
-     * 1: Pass Die
-     * 2: Fail 1 Die
-     * 3: Fail 2 Die
-     */
-    var dieTestResult: Int = 0,
+    var dieTestResult: DieTestResult = DieTestResult.NOT_TESTED,
     var marking: Int = 0,
     var failMarkInspection: Int = 0,
     var reProbingResult: Int = 0,
     var needleMarkInspectionResult: Int = 0,
     var dieCoordinatorValueX: Int = 0,
-    /**
-     * 0: Skip Die
-     * 1: Probing Die
-     * 2: Compulsory Marking Die
-     */
-    var dieProperty: Int = 0,
+    var dieProperty: DieProperty = DieProperty.SKIP,
     var needleMarkInspectionExecutionDieSelection: Int = 0,
     var samplingDie: Int = 0,
     /**

@@ -12,13 +12,13 @@ class TskParser(data: ByteArray) {
         mapFile.header = loadMapFileHeader(br)
 
         when (mapFile.header?.mapVersion) {
-            0 -> {
+            MapVersion.NORMAL -> {
                 // Handle case 0
             }
-            1 -> {
+            MapVersion.CHIPS_250K -> {
                 // Handle case 1
             }
-            2 -> {
+            MapVersion.MULTI_SITES_256 -> {
                 br.goto(mapFile.header?.testDieInformationAddress ?: 0)
                 val dieCount = (mapFile.header?.mapDataAreaRowSize ?: 0) * 
                                (mapFile.header?.mapDataAreaLineSize ?: 0)
@@ -27,11 +27,14 @@ class TskParser(data: ByteArray) {
                     // Handle extension header
                 }
             }
-            3 -> {
+            MapVersion.MULTI_SITES_256_NO_EXT -> {
                 // Handle case 3
             }
-            4 -> {
+            MapVersion.CATEGORY_1024 -> {
                 // Handle case 4
+            }
+            else -> {
+                // Handle null case
             }
         }
     }
@@ -46,7 +49,7 @@ class TskParser(data: ByteArray) {
         header.indexSizeY = br.readAsInt(4)
         header.standardOrientationFlatDirection = br.readAsInt(2)
         header.finalEditingMachineType = br.readAsInt(1)
-        header.mapVersion = br.readAsInt(1)
+        header.mapVersion = MapVersion.fromValue(br.readAsInt(1))
         header.mapDataAreaRowSize = br.readAsInt(2)
         header.mapDataAreaLineSize = br.readAsInt(2)
         header.mapDataForm = br.readAsInt(4)
@@ -55,9 +58,12 @@ class TskParser(data: ByteArray) {
         header.lotNo = br.readAsString(18)
         header.cassetteNo = br.readAsInt(2)
         header.slotNo = br.readAsInt(2)
-        header.xCoordinatesIncreaseDirection = br.readAsInt(1)
-        header.yCoordinatesIncreaseDirection = br.readAsInt(1)
-        header.referenceDieSettingProcedures = br.readAsInt(1)
+        val xDir = br.readAsInt(1)
+        header.xCoordinatesIncreaseDirection = if (xDir == 0) null else CoordinateDirection.fromValue(xDir)
+        val yDir = br.readAsInt(1)
+        header.yCoordinatesIncreaseDirection = if (yDir == 0) null else CoordinateDirection.fromValue(yDir)
+        val refDie = br.readAsInt(1)
+        header.referenceDieSettingProcedures = if (refDie == 0) null else ReferenceDieSettingProcedure.fromValue(refDie)
         header.reserved = br.readAsInt(1)
         header.targetDiePositionX = br.readAsInt(4).toUInt()
         header.targetDiePositionY = br.readAsInt(4).toUInt()
@@ -119,7 +125,7 @@ class TskParser(data: ByteArray) {
         for (i in 0 until dieCount) {
             val die = TestResultPerDie()
             var word = br.readAsInt(2)
-            die.dieTestResult = word shr 14
+            die.dieTestResult = DieTestResult.fromValue(word shr 14)
             die.marking = (word shr 13) and 1
             die.failMarkInspection = (word shr 12) and 1
             die.reProbingResult = (word shr 10) and 3
@@ -127,7 +133,7 @@ class TskParser(data: ByteArray) {
             die.dieCoordinatorValueX = word and 511
             
             word = br.readAsInt(2)
-            die.dieProperty = word shr 14
+            die.dieProperty = DieProperty.fromValue(word shr 14)
             die.needleMarkInspectionExecutionDieSelection = (word shr 13) and 1
             die.samplingDie = (word shr 12) and 1
             die.codeBitOfCoordinatorValueX = (word shr 11) and 1

@@ -1,10 +1,12 @@
 package com.bangbang93.file.tsk.example
 
-import com.bangbang93.file.tsk.TskFileReader
+import com.bangbang93.file.tsk.*
+import java.io.File
 
 fun main() {
-    // Example 1: Parse from file path
-    val mapFile = TskFileReader.parseFile("/path/to/file.tsk")
+    // Example 1: Parse from byte array (file reading removed from API)
+    val data = File("/path/to/file.tsk").readBytes()
+    val mapFile = TskFileReader.parseBytes(data)
     
     println("=== TSK File Information ===")
     mapFile.header?.let { header ->
@@ -30,22 +32,19 @@ fun main() {
         println("Index Size Y: ${header.indexSizeY}")
     }
     
-    // Example 2: Process die results
+    // Example 2: Process die results with type-safe enums
     println("\n=== Die Results Summary ===")
     val dieResults = mapFile.dieResults
     println("Total Dies: ${dieResults.size}")
     
-    val passCount = dieResults.count { it.dieTestResult == 1 }
-    val fail1Count = dieResults.count { it.dieTestResult == 2 }
-    val fail2Count = dieResults.count { it.dieTestResult == 3 }
-    val notTestedCount = dieResults.count { it.dieTestResult == 0 }
+    val passCount = dieResults.count { it.dieTestResult == DieTestResult.PASS }
+    val fail1Count = dieResults.count { it.dieTestResult == DieTestResult.FAIL_1 }
+    val fail2Count = dieResults.count { it.dieTestResult == DieTestResult.FAIL_2 }
+    val notTestedCount = dieResults.count { it.dieTestResult == DieTestResult.NOT_TESTED }
     
     println("Pass: $passCount")
     println("Fail 1: $fail1Count")
     println("Fail 2: $fail2Count")
     println("Not Tested: $notTestedCount")
-    
-    // Example 3: Parse from byte array
-    // val data: ByteArray = ... // your byte array
-    // val mapFile2 = TskFileReader.parseBytes(data)
 }
+

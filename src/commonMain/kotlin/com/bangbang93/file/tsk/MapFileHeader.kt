@@ -16,14 +16,7 @@ data class MapFileHeader(
     /** 0 to 359 (Unit: degree°), Example: 180 */
     var standardOrientationFlatDirection: Int = 0,
     var finalEditingMachineType: Int = 0,
-    /**
-     * 0: Normal
-     * 1: 250,000 Chips
-     * 2: 256 Multi-sites (currently only this is supported)
-     * 3: 256 Multi-sites (without extended header information)
-     * 4: 1024 category
-     */
-    var mapVersion: Int = 0,
+    var mapVersion: MapVersion = MapVersion.NORMAL,
     /** Number of columns, Example: 400 */
     var mapDataAreaRowSize: Int = 0,
     /** Number of rows, Example: 400 */
@@ -35,11 +28,10 @@ data class MapFileHeader(
     var cassetteNo: Int = 0,
     var slotNo: Int = 0,
     /** 1: leftward 2: rightward */
-    var xCoordinatesIncreaseDirection: Int = 0,
+    var xCoordinatesIncreaseDirection: CoordinateDirection? = null,
     /** 1: forward 2: backward */
-    var yCoordinatesIncreaseDirection: Int = 0,
-    /** 1: Wafer center die 3: Target sense die 2: Teaching die */
-    var referenceDieSettingProcedures: Int = 0,
+    var yCoordinatesIncreaseDirection: CoordinateDirection? = null,
+    var referenceDieSettingProcedures: ReferenceDieSettingProcedure? = null,
     var reserved: Int = 0,
     /**
      * Reference die position X from wafer center (Unit: 0.01um)

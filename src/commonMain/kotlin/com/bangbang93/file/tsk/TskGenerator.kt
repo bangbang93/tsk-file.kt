@@ -37,7 +37,7 @@ class TskGenerator {
         bw.writeAsInt(header.indexSizeY, 4)
         bw.writeAsInt(header.standardOrientationFlatDirection, 2)
         bw.writeAsInt(header.finalEditingMachineType, 1)
-        bw.writeAsInt(header.mapVersion, 1)
+        bw.writeAsInt(header.mapVersion.value, 1)
         bw.writeAsInt(header.mapDataAreaRowSize, 2)
         bw.writeAsInt(header.mapDataAreaLineSize, 2)
         bw.writeAsInt(header.mapDataForm, 4)
@@ -46,9 +46,9 @@ class TskGenerator {
         bw.writeAsString(header.lotNo, 18)
         bw.writeAsInt(header.cassetteNo, 2)
         bw.writeAsInt(header.slotNo, 2)
-        bw.writeAsInt(header.xCoordinatesIncreaseDirection, 1)
-        bw.writeAsInt(header.yCoordinatesIncreaseDirection, 1)
-        bw.writeAsInt(header.referenceDieSettingProcedures, 1)
+        bw.writeAsInt(header.xCoordinatesIncreaseDirection?.value ?: 0, 1)
+        bw.writeAsInt(header.yCoordinatesIncreaseDirection?.value ?: 0, 1)
+        bw.writeAsInt(header.referenceDieSettingProcedures?.value ?: 0, 1)
         bw.writeAsInt(header.reserved, 1)
         // Convert UInt to Int safely - these are coordinates/distances that should fit in signed range
         bw.writeAsInt(header.targetDiePositionX.toInt() and Int.MAX_VALUE, 4)
@@ -131,7 +131,7 @@ class TskGenerator {
 
     private fun convertTestResultsToBinary(results: List<TestResultPerDie>) {
         for (die in results) {
-            var word = (die.dieTestResult shl 14) or
+            var word = (die.dieTestResult.value shl 14) or
                        (die.marking shl 13) or
                        (die.failMarkInspection shl 12) or
                        (die.reProbingResult shl 10) or
@@ -139,7 +139,7 @@ class TskGenerator {
                        die.dieCoordinatorValueX
             bw.writeAsInt(word and 0xFFFF, 2)
 
-            word = (die.dieProperty shl 14) or
+            word = (die.dieProperty.value shl 14) or
                    (die.needleMarkInspectionExecutionDieSelection shl 13) or
                    (die.samplingDie shl 12) or
                    (die.codeBitOfCoordinatorValueX shl 11) or

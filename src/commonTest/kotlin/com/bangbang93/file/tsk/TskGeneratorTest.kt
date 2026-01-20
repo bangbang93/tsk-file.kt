@@ -13,7 +13,7 @@ class TskGeneratorTest {
             operatorName = "TestOp",
             deviceName = "TestDevice",
             waferSize = 200,
-            mapVersion = 2,
+            mapVersion = MapVersion.MULTI_SITES_256,
             mapDataAreaRowSize = 10,
             mapDataAreaLineSize = 10,
             totalTestedDice = 100,
@@ -43,7 +43,7 @@ class TskGeneratorTest {
             operatorName = "TestOp",
             deviceName = "TestDevice",
             waferSize = 200,
-            mapVersion = 2,
+            mapVersion = MapVersion.MULTI_SITES_256,
             mapDataAreaRowSize = 2,
             mapDataAreaLineSize = 2,
             totalTestedDice = 4,
@@ -58,10 +58,10 @@ class TskGeneratorTest {
         )
         
         val dieResults = listOf(
-            TestResultPerDie(dieTestResult = 1), // Pass
-            TestResultPerDie(dieTestResult = 1), // Pass
-            TestResultPerDie(dieTestResult = 1), // Pass
-            TestResultPerDie(dieTestResult = 2)  // Fail
+            TestResultPerDie(dieTestResult = DieTestResult.PASS), // Pass
+            TestResultPerDie(dieTestResult = DieTestResult.PASS), // Pass
+            TestResultPerDie(dieTestResult = DieTestResult.PASS), // Pass
+            TestResultPerDie(dieTestResult = DieTestResult.FAIL_1)  // Fail
         )
         
         val mapFile = TskMapFile(header = header, dieResults = dieResults)
