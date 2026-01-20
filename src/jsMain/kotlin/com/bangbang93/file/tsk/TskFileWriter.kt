@@ -1,18 +1,9 @@
 package com.bangbang93.file.tsk
 
 /**
- * Node.js-specific file writing utility
+ * TSK file writer utility for generating TSK files as byte arrays
  */
 object TskFileWriter {
-    /**
-     * Generate and write a TSK file to the specified path
-     */
-    fun writeFile(mapFile: TskMapFile, filePath: String) {
-        val generator = TskGenerator()
-        val data = generator.generate(mapFile)
-        writeFileSync(filePath, data)
-    }
-
     /**
      * Generate TSK file as byte array
      */

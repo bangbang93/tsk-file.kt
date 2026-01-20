@@ -1,20 +1,9 @@
 package com.bangbang93.file.tsk
 
-import java.io.File
-
 /**
- * JVM-specific file writing utility
+ * TSK file writer utility for generating TSK files as byte arrays
  */
 object TskFileWriter {
-    /**
-     * Generate and write a TSK file to the specified path
-     */
-    fun writeFile(mapFile: TskMapFile, filePath: String) {
-        val generator = TskGenerator()
-        val data = generator.generate(mapFile)
-        File(filePath).writeBytes(data)
-    }
-
     /**
      * Generate TSK file as byte array
      */

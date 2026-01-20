@@ -1,20 +1,9 @@
 package com.bangbang93.file.tsk
 
-import java.io.File
-
 /**
- * JVM-specific file reading utility
+ * TSK file reader utility for parsing TSK files from byte arrays
  */
 object TskFileReader {
-    /**
-     * Parse a TSK file from a file path
-     */
-    fun parseFile(filePath: String): TskMapFile {
-        val data = File(filePath).readBytes()
-        val parser = TskParser(data)
-        return parser.mapFile
-    }
-
     /**
      * Parse a TSK file from byte array
      */
