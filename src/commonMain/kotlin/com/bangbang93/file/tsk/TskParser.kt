@@ -17,7 +17,7 @@ class TskParser(data: ByteArray) {
                 val dieCount = (mapFile.header?.mapDataAreaRowSize ?: 0) * 
                                (mapFile.header?.mapDataAreaLineSize ?: 0)
                 mapFile.dieResults = loadTestResults(br, dieCount)
-                if (mapFile.header?.mapFileConfiguration?.extensionHeaderInformation(0) != 0) {
+                if (mapFile.header?.mapFileConfiguration?.extensionHeaderInformation() != 0) {
                     // Handle extension header
                 }
             }

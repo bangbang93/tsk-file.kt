@@ -11,11 +11,18 @@ class MapFileConfiguration(value: String) {
         require(value.all { it == '0' || it == '1' }) {
             "MapFileConfiguration value must contain only binary digits ('0' or '1'): \"$value\""
         }
-        // Convert value to binary representation and reverse
-        this.bitSet = value.map { it.digitToInt() }.reversed().toMutableList()
+        // Convert value to binary representation and reverse, padding to at least 6 bits
+        this.bitSet = value.map { it.digitToInt() }.reversed().toMutableList().apply {
+            while (size < 6) {
+                add(0)
+            }
+        }
     }
 
-    fun getValue(): String = value
+    fun getValue(): String {
+        // Return current bitSet state, reversed and as string
+        return bitSet.reversed().joinToString("") { it.toString() }
+    }
 
     fun getRawData(): Int {
         val reversed = bitSet.reversed()

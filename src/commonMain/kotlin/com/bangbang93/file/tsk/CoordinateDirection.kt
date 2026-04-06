@@ -1,13 +1,17 @@
 package com.bangbang93.file.tsk
 
 /**
- * Coordinate direction enumeration
+ * Coordinate direction enumeration.
+ *
+ * The semantic meaning depends on the axis:
+ * - NEGATIVE: leftward (X) or forward (Y)
+ * - POSITIVE: rightward (X) or backward (Y)
  */
 enum class CoordinateDirection(val value: Int) {
-    /** Leftward or Forward (depending on axis) */
-    DIRECTION_1(1),
-    /** Rightward or Backward (depending on axis) */
-    DIRECTION_2(2);
+    /** Negative axis direction: leftward (X) or forward (Y) */
+    NEGATIVE(1),
+    /** Positive axis direction: rightward (X) or backward (Y) */
+    POSITIVE(2);
 
     companion object {
         fun fromValue(value: Int): CoordinateDirection {

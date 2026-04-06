@@ -86,7 +86,9 @@ mapFile.dieResults.forEach { die ->
 const { TskFileReader } = require('tsk-file');
 const fs = require('fs');
 
-const data = fs.readFileSync('/path/to/file.tsk');
+const buffer = fs.readFileSync('/path/to/file.tsk');
+// Convert Buffer to Int8Array for Kotlin/JS ByteArray
+const data = new Int8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
 const mapFile = TskFileReader.parseBytes(data);
 
 // Access header information
@@ -171,7 +173,9 @@ const mapFile = new TskMapFile({ header, dieResults });
 const data = TskFileWriter.writeBytes(mapFile);
 
 // Write to file (handle file I/O separately)
-fs.writeFileSync('/path/to/output.tsk', data);
+// Convert Int8Array to Buffer for Node.js fs
+const buffer = Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+fs.writeFileSync('/path/to/output.tsk', buffer);
 ```
 
 ## Building
