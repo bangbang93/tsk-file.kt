@@ -19,6 +19,15 @@ class MapFileConfiguration(value: String) {
         }
     }
 
+    /**
+     * Get the current binary string representation of the configuration.
+     * 
+     * This returns the current state of the bitSet as a binary string,
+     * which may differ from the original input value if any bits have been modified.
+     * The string is always padded to at least 6 bits.
+     * 
+     * @return Binary string representing the current configuration state
+     */
     fun getValue(): String {
         // Return current bitSet state, reversed and as string
         return bitSet.reversed().joinToString("") { it.toString() }
