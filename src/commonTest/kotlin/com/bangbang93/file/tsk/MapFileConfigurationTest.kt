@@ -10,7 +10,8 @@ class MapFileConfigurationTest {
         // Binary "10" = decimal 2
         val config = MapFileConfiguration("10")
         
-        assertEquals("10", config.getValue())
+        // getValue() should return the current state (padded to 6 bits)
+        assertEquals("000010", config.getValue())
         assertEquals(2, config.getRawData())
     }
 
@@ -42,5 +43,29 @@ class MapFileConfigurationTest {
         
         // Other bits should remain 0
         assertEquals(0, config.testResultInformationPerDie())
+        
+        // getValue() should reflect modifications
+        // bitSet is [1, 0, 1, 0, 0, 0], reversed is [0, 0, 0, 1, 0, 1]
+        assertEquals("000101", config.getValue())
+    }
+    
+    @Test
+    fun testShortBinaryStringPadding() {
+        // Test that short binary strings are padded to at least 6 bits
+        val config1 = MapFileConfiguration("1")
+        assertEquals("000001", config1.getValue())
+        assertEquals(1, config1.getRawData())
+        
+        val config2 = MapFileConfiguration("101")
+        assertEquals("000101", config2.getValue())
+        assertEquals(5, config2.getRawData())
+        
+        // All accessors should work without IndexOutOfBoundsException
+        assertEquals(1, config1.headerInformation())
+        assertEquals(0, config1.testResultInformationPerDie())
+        assertEquals(0, config1.lineCategoryInformation())
+        assertEquals(0, config1.extensionHeaderInformation())
+        assertEquals(0, config1.testResultInformationPerExtensionDie())
+        assertEquals(0, config1.extensionLineCategoryInformation())
     }
 }
